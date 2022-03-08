@@ -1,0 +1,97 @@
+void Entity::GetFutureCoords(float* CoordsAfterMove, int* UniformCoordsAfterMove, const float* positions)
+{
+	for (int i = 0; i < 4; ++i)
+	{
+		float tempX = truncf((positions[4 * i] + velocity[RIGHT] - velocity[LEFT]) * 100) / 100;
+		float tempY = truncf((positions[4 * i + 1] + velocity[UP] - velocity[DOWN]) * 100) / 100;
+
+		CoordsAfterMove[2 * i] = tempX;
+		CoordsAfterMove[2 * i + 1] = tempY;
+
+		UniformCoordsAfterMove[2 * i] = static_cast<int>(floorf(tempX)) + 16;
+		UniformCoordsAfterMove[2 * i + 1] = static_cast<int>(floorf(tempY)) + 9;
+		//std::cout << tempX << " " << tempY << std::endl;
+	}
+}
+bool Entity::CheckBlock(int direction, int* uniCoords, float* coords)
+{ // BUG: Doesn't allow moving against a wall (one vector is okay, the other is blocked => both are blocked)
+	for (int i = 0; i < 2; ++i)
+	{
+		if (direction == LEFT && i == 1) 
+			i = 4;
+		int const index = DrawnObject::FindObjectAtCoordinates(uniCoords[direction * 2 + 2 * i], uniCoords[direction * 2 + 1 + 2 * i]);
+		if (index >= 0 && DrawnObject::objects[index]->isSolid)
+		{
+			velocity[direction] = 0.0f;
+			if (direction == DOWN) isOnGround = true;
+		}
+		else if (i==0)
+		{
+			//isBlockedInDirection[direction] = false;
+			if (direction == DOWN) isOnGround = false;
+		}
+		if (direction==LEFT && i == 1) break;
+	}
+	return isBlockedInDirection[direction];
+}
+
+bool Entity::CheckCollisions() //W.I.P
+{
+	const float* position = sprite->GetPosition(); //array of 16 floats, 4 per each point => x;y;position;index
+
+	int* UniformCoordsAfterMove = new int[8];
+	float* CoordsAfterMove = new float[8];
+	GetFutureCoords(CoordsAfterMove, UniformCoordsAfterMove, position);
+
+	for (int direction = DOWN; direction<=LEFT; direction++)
+	{
+		CheckBlock(direction, UniformCoordsAfterMove, CoordsAfterMove);
+	}
+
+	/*for (int i = 0; i < 4; ++i)
+	{
+		delete[] UniformCoordsAfterMove[i];
+		delete[] CoordsAfterMove[i];
+	}*/
+	delete[] UniformCoordsAfterMove;
+	delete[] CoordsAfterMove;
+
+
+	return false;
+}
+
+int Entity::GetCollisionIndex(float posX, float posY, int direction, int directionCorner)
+{
+	float tempX = truncf(posX * 100) / 100;
+	float tempY = truncf(posY * 100) / 100;
+	switch (direction)
+	{//BUG WALKING UNDER STUFF CONSIDERS 2nd POINT AS A BLOCK HIGHER
+	case DOWN:
+		tempY = truncf((posY - velocity[DOWN]) * 100) / 100;
+		if (tempX == floorf(tempX) && directionCorner == 1) tempX -= 1.0f;
+		break;
+	case RIGHT:
+		tempX = truncf((posX + velocity[RIGHT]) * 100) / 100;
+		if (tempX == floorf(tempX)) tempX -= 1.0f;
+		if (tempY == floorf(tempY) && directionCorner==1) 
+			tempY -= 1.0f;
+		break;
+	case UP:
+		tempY = truncf((posY + velocity[UP]) * 100) / 100;
+		if (tempY == floorf(tempY)) tempY -= 1.0f;
+		if (tempX == floorf(tempX) && directionCorner == 0) tempX -= 1.0f;
+		break;
+	case LEFT:
+		tempX = truncf((posX - velocity[LEFT]) * 100) / 100;
+		if (tempY == floorf(tempY) && directionCorner == 0) tempY -= 1.0f;
+		break;
+	default:
+		break;
+	}
+
+	const int index = DrawnObject::FindObjectAtCoordinates(tempX, tempY);
+	if (index >= 0 && velocity[DOWN] > 0.0f && direction == 0 && DrawnObject::objects[index]->isSolid)
+	{
+		isOnGround = true;
+	}
+	return index;

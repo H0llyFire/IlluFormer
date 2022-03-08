@@ -1,36 +1,43 @@
 #include"Entity.h"
-#include "../Graphics/Coordinating.h"
 
+#include <iomanip>
 
 
 Entity::Entity(EntityType type, DrawnObject* object)
-	: isOnGround(false), currentSpeedBonus(0.0f), tick(0), velocity({ 0.0f, 0.0f }), typeName(type), sprite(object), isMoving(false)
+	: isOnGround(false), currentSpeedBonus(0.0f), tick(0), typeName(type), sprite(object), isMoving(false), isMidJump(false), jumpVelocity(0.0f)
 {
+	for(int i = 0; i<4; ++i)
+	{
+		isMovingInDirection[i] = false;
+		isBlockedInDirection[i] = false;
+		velocity[i] = 0.0f;
+		overrideVelocity[i] = 0.0f;
+	}
 	switch (type)
 	{
 		case EntityType::PLAYER:
 			health = 3;
 			minSpeed = 0.1f;
 			maxSpeed = 0.15f;
-			facing = Direction::RIGHT;
+			facing = RIGHT;
 			break;
 		case EntityType::GHOST:
 			health = 1;
 			minSpeed = 0.05f;
 			maxSpeed = 0.08f;
-			facing = Direction::LEFT;
+			facing = LEFT;
 			break;
 		case EntityType::BLOCK:
 			health = -1;
 			minSpeed = 0.1f;
 			maxSpeed = 0.1f;
-			facing = Direction::DOWN;
+			facing = DOWN;
 			break;
 		default:
 			health = 0;
 			minSpeed = 0.0f;
 			maxSpeed = 0.0f;
-			facing = Direction::RIGHT;
+			facing = RIGHT;
 			break;
 	}
 
@@ -42,141 +49,234 @@ Entity::~Entity()
 
 bool Entity::PollEntityEvents()
 {
-	//if (!isOnGround) (MoveEntity({0.0f, -0.2f}));
-	//float* pos = sprite->GetPosition();
-
-	//std::cout << "Entity tick: " << tick << std::endl;
-	tick++;
-	if(tick%60==0) { std::cout << "seconds: " << tick/60 << std::endl; }
-	if(tick%5==0)
+	if (isMoving)
 	{
-		//if (velocity.speedX > 0 && velocity.speedX <= maxSpeed)		velocity.speedX += 0.01f;
-		//if (velocity.speedX < 0 && velocity.speedX >= -1.0f*maxSpeed)  velocity.speedX -= 0.01f;
+		if (isMovingInDirection[LEFT]) { velocity[LEFT] += 0.01f; }
+		else { velocity[LEFT] -= 0.03f; }
+		if (velocity[LEFT] > maxSpeed) { velocity[LEFT] = maxSpeed; }
+		else if (velocity[LEFT] < 0.0f) { velocity[LEFT] = 0.0f; }
+
+		if (isMovingInDirection[RIGHT]) { velocity[RIGHT] += 0.01f; }
+		else { velocity[RIGHT] -= 0.03f; }
+		if (velocity[RIGHT] > maxSpeed) { velocity[RIGHT] = maxSpeed; }
+		else if (velocity[RIGHT] < 0.0f) { velocity[RIGHT] = 0.0f; }
+
+		if (velocity[UP] > 0.0f) velocity[UP] = 0.0f;
 	}
-	
+	else if (velocity[DOWN] != 0.0f || velocity[RIGHT] != 0.0f || velocity[UP] != 0.0f || velocity[LEFT] != 0.0f) std::cout << "ERROR IN VELOCITY MANAGEMENT" << std::endl << std::endl << std::endl << std::endl;
+	SetGravity();
+	//TODO Add jump velocity variable and function to add the velocity
+	SetJumpVelocity();
+	CheckCollisions(); //Bugging into sprites
 
-	
+	if (isMoving && velocity[DOWN] <= 0.0f && velocity[RIGHT] <= 0.0f && velocity[LEFT] <= 0.0f && velocity[UP] <= 0.0f)
+	{
+		isMoving = false;
+	}
 
+	if (isMoving)
+	{
+		MoveEntity();
+	}
 
+	tick++;
 
 	return false;
 }
 
 bool Entity::MoveEntity()
 {
-	CheckCollisions();
-
-	SetVelocity({ static_cast<float>(isMovingRight) * 1.0f + static_cast<float>(isMovingLeft) * -1.0f,
-						   static_cast<float>(isMovingUp) * 1.0f + static_cast<float>(isMovingDown) * -1.0f });
-
-	sprite->AddUpPosition(velocity.speedX * (minSpeed + currentSpeedBonus), velocity.speedY * minSpeed);
+	sprite->AddUpPosition(velocity[RIGHT] - velocity[LEFT], velocity[UP] - velocity[DOWN]);
 	return {};
+	
 }
 
 bool Entity::MoveEntity(Direction direction)
 {
 	switch (direction)
 	{
-		case Direction::LEFT:
+		case LEFT:
 			sprite->AddUpPosition(-maxSpeed,0.0f);
 			break;
-		case Direction::RIGHT:
+		case RIGHT:
 			sprite->AddUpPosition(maxSpeed, 0.0f);
 			break;
-		case Direction::UP:
+		case UP:
 			sprite->AddUpPosition(0.0f, maxSpeed);
 			break;
-		case Direction::DOWN:
+		case DOWN:
 			sprite->AddUpPosition(0.0f, -maxSpeed);
 			break;
 	}
 	return {};
 }
 
-bool Entity::ChangeVelocity(Velocity vel)
+bool Entity::ChangeVelocity(float speed, Direction direction)
 {
-	velocity.speedX += vel.speedX;
-	velocity.speedY += vel.speedY;
+	velocity[direction] += speed;
 	return false;
 }
 
-bool Entity::SetVelocity(Velocity vel)
+bool Entity::SetVelocity(float speed, Direction direction)
 {
-	velocity.speedX = vel.speedX;
-	velocity.speedY = vel.speedY;
+	velocity[direction] = speed;
 	return false;
+}
+
+/*float tempX = truncf((positions[4 * i] + velocity[RIGHT] - velocity[LEFT]) * 100) / 100;
+ *float tempY = truncf((positions[4 * i + 1] + velocity[UP] - velocity[DOWN]) * 100) / 100;
+ *
+ *int const index = DrawnObject::FindObjectAtCoordinates(uniCoords[direction * 2 + 2 * i], uniCoords[direction * 2 + 1 + 2 * i]);
+ *
+ *
+ *
+ */
+
+
+int Entity::GetCollisionIndex(float posX, float posY, int direction, int directionCorner)
+{ //BUG WORKS LIKE 95%, walking in single block wide corridors is impossible
+	float tempX = posX;
+	float tempY = posY;
+	switch (direction)
+	{
+	case DOWN:
+		tempY = posY - velocity[DOWN];
+		if (tempX == floorf(tempX) && directionCorner == 1) tempX -= 1.0f;
+		break;
+	case RIGHT:
+		tempX = posX + velocity[RIGHT];
+		if (tempX == floorf(tempX)) tempX -= 1.0f;
+		if (tempY == floorf(tempY) && directionCorner==1) 
+			tempY -= 1.0f;
+		break;
+	case UP:
+		tempY = posY + velocity[UP];
+		if (tempY == floorf(tempY)) tempY -= 1.0f;
+		if (tempX == floorf(tempX) && directionCorner == 0) tempX -= 1.0f;
+		break;
+	case LEFT:
+		tempX = posX - velocity[LEFT];
+		if (tempY == floorf(tempY) && directionCorner == 0) tempY -= 1.0f;
+		break;
+	default:
+		break;
+	}
+
+	const int index = DrawnObject::FindObjectAtCoordinates(tempX, tempY);
+	if (index >= 0 && velocity[DOWN] > 0.0f && direction == 0 && DrawnObject::objects[index]->isSolid)
+	{
+		isOnGround = true;
+	}
+	return index;
+}
+bool Entity::CheckBlock(int direction, int blockIndex, float position)
+{ //BUG RIGHT SIDE BUGS OUT COMPLETELY, JUMPING ON SECOND PLATFORM GOES YEET
+	if(DrawnObject::objects[blockIndex]->isSolid)
+	{
+		float vel = abs(abs(position) - abs(DrawnObject::objects[blockIndex]->GetPosition()[direction > 1 ? (direction - 2) * 4 + (direction + 1) % 2 : (direction + 2) * 4 + (direction + 1) % 2]));
+		//std::cout << "temp: " << vel << std::endl;
+		
+		overrideVelocity[direction] = vel;
+		if (vel == 0.0f) velocity[direction] = vel;
+	}
+	return true;
+}
+
+void Entity::OverrideVelocity()
+{
+	for (int i = DOWN; i <= LEFT; ++i)
+	{
+		if(overrideVelocity[i]!=0.0f)
+		{
+			velocity[i] = overrideVelocity[i];
+			overrideVelocity[i] = 0.0f;
+			isMoving = true;
+		}
+	}
 }
 
 bool Entity::CheckCollisions() //W.I.P
 {
-	const float* position = sprite->GetPosition();
-
-	//int* uniformCords = Coordinates::UniformCoordinates(position);
-	//if ( velocity.speedY < 0.0f ) std::cout<< "Crossed" << std::endl;
-	//std::cout << position[4] << " / " << round(position[4]) << std::endl;
-
-	//Check direction => choose two to three pts which to check 
-
-	int afterMoveCords[4][2];
-	for (int i = 0; i < 4; ++i)
+	const float* position = sprite->GetPosition(); //array of 16 floats, 4 per each point => x;y;position;index
+	isOnGround = false;
+	for (int direction = DOWN; direction <= LEFT; ++direction)
 	{
-		float tempX = truncf((position[4 * i]     + velocity.speedX * (minSpeed + currentSpeedBonus))*100)/100;
-		float tempY = truncf((position[4 * i + 1] + velocity.speedY * minSpeed)*100)/100;
-
-		afterMoveCords[i][0] = static_cast<int>(floorf(tempX)) + 16;
-		afterMoveCords[i][1] = static_cast<int>(floorf(tempY)) + 9;
-	}
-
-	for (int i = 1; i < 5; ++i)
-	{
-		const int tempPtA = afterMoveCords[i - 1][i % 2 == 0 ? 1 : 0];
-		const int tempPtB = afterMoveCords[i == 4 ? 0 : i][i % 2 == 0 ? 1 : 0];
-		if (i % 2 != 0)
+		for (int n = 0; n < 2; ++n)
 		{
-			int const index = DrawnObject::FindObjectAtCoordinates(tempPtA, afterMoveCords[i - 1][i % 2 == 0 ? 0 : 1]);
-			if (index >= 0 && DrawnObject::objects[index]->isSolid)
+			int index = GetCollisionIndex(position[((direction+n==4?-1:direction) + n) * 4], position[((direction + n == 4 ? -1 : direction) + n) * 4 + 1], direction, n);
+			if(index>=0 && DrawnObject::objects[index]->isSolid)
 			{
-				isMovingRight = false;
-				isMovingLeft = false;
-				currentSpeedBonus = 0.0f;
-			}
-		}
-		else
-		{
-			int const index = DrawnObject::FindObjectAtCoordinates(afterMoveCords[i - 1][i % 2 == 0 ? 0 : 1], tempPtA);
-			if (index >= 0 && DrawnObject::objects[index]->isSolid)
-			{
-				isMovingDown = false;
-				isMovingUp = false;
-			}
-		}
-
-		if (tempPtA != tempPtB)
-		{
-			if (i % 2 != 0)
-			{
-				int const index = DrawnObject::FindObjectAtCoordinates(tempPtB, afterMoveCords[i == 4 ? 0 : i][i % 2 == 0 ? 0 : 1]);
-				if (index >= 0 && DrawnObject::objects[index]->isSolid)
-				{
-					isMovingRight = false;
-					isMovingLeft = false;
-					currentSpeedBonus = 0.0f;
-				}
-			}
-			else
-			{
-				int const index = DrawnObject::FindObjectAtCoordinates(afterMoveCords[i == 4 ? 0 : i][i % 2 == 0 ? 0 : 1], tempPtB);
-				if (index >= 0 && DrawnObject::objects[index]->isSolid)
-				{
-					isMovingDown = false;
-					isMovingUp = false;
-				}
+				CheckBlock(direction, index, position[direction * 4 + (direction + 1) % 2]);
 			}
 		}
 	}
-
-	return false;
+	OverrideVelocity();
+	return true;
 }
+void Entity::Jump()
+{
+	if (isOnGround) 
+	{
+		jumpVelocity = 0.5f;
+		isMidJump = true;
+		isMoving = true;
+	}
+	// BUG jumping off of any tile entity
+}
+
+void Entity::SetGravity()
+{
+	//if (isOnGround)
+		//velocity[DOWN] = 0.0f;
+	if (velocity[DOWN] <= 0.0f)
+	{
+		velocity[DOWN] = 0.02f;
+		isMoving = true;
+	}
+	else
+	{
+		velocity[DOWN] += 0.004f;
+		isMoving = true;
+	}
+
+	if (velocity[DOWN] > maxSpeed)
+		velocity[DOWN] = maxSpeed;
+
+	if (jumpVelocity > 0.0f)
+	{
+		jumpVelocity -= 0.04f;
+		if (jumpVelocity <= 0.0f)
+		{
+			jumpVelocity = 0.0f;
+			isMidJump = false;
+		}
+	}
+}
+void Entity::SetGravity(float modifier)
+{
+}
+
+void Entity::SetJumpVelocity()
+{
+	velocity[UP] += jumpVelocity;
+}
+
+void Entity::SetCollision(int i, int ptA, int ptB, int* afterMoveCords) //transfer a part of CheckCollisions
+{
+}
+
+void Entity::PrintStatus()
+{
+	float* positions = sprite->GetPosition();
+	std::cout << "Is On Ground: " << isOnGround << std::endl;
+	std::cout << "Is Mid Jump: " << isMidJump << std::endl;
+	std::cout << "Is Moving: " << isMoving << std::endl;
+	std::cout << "Position: " << sprite->GetPosition()[0] << " " << sprite->GetPosition()[1] << std::endl;
+	std::cout << std::setprecision(9) << "Velocity D: " << velocity[DOWN] << " R: " << velocity[RIGHT] << " U: " << velocity[UP] << " L: " << velocity[LEFT] << std::endl;
+	for (int i = 0; i < 4; ++i)
+		{ std::cout << std::setprecision(9) << "Point " << i << ":  " << positions[4 * i] << "; " << positions[4 * i + 1] << std::endl; }
+	std::cout << std::endl;
+} 
 
 bool Entity::PollEntitiesEvents()
 {

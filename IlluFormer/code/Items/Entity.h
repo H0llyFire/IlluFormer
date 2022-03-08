@@ -11,9 +11,11 @@ private:
 	float maxSpeed;
 	float minSpeed;
 	float currentSpeedBonus;
+	float jumpVelocity;
 	unsigned int tick;
 
-	Velocity velocity;
+	float velocity[4]{};
+	float overrideVelocity[4]{};
 	EntityType typeName;
 	Direction facing;
 	DrawnObject* sprite;
@@ -21,19 +23,29 @@ private:
 
 public:
 	bool isMoving;
-	bool isMovingRight;
-	bool isMovingLeft;
-	bool isMovingUp;
-	bool isMovingDown;
+	bool isMidJump;
+	bool isMovingInDirection[4]{};
+	bool isBlockedInDirection[4]{};
 
 	Entity(EntityType type, DrawnObject* object);
 	~Entity();
 	bool PollEntityEvents();
 	bool MoveEntity();
 	bool MoveEntity(Direction direction);
-	bool ChangeVelocity(Velocity vel);
-	bool SetVelocity(Velocity vel);
+
+	bool ChangeVelocity(float speed, Direction direction);
+	bool SetVelocity(float speed, Direction direction);
+	int GetCollisionIndex(float posX, float posY, int direction, int directionCorner);
+	bool CheckBlock(int direction, int blockIndex, float position);
+	void OverrideVelocity();
 	bool CheckCollisions();
+
+	void Jump();
+	void SetGravity();
+	void SetGravity(float modifier);
+	void SetJumpVelocity();
+	void SetCollision(int i, int ptA, int ptB, int* afterMoveCords);
+	void PrintStatus();
 
 	bool UnloadEntity(const int index);
 

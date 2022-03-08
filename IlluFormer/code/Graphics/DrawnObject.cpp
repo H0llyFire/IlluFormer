@@ -65,11 +65,15 @@ float* DrawnObject::GetPosition() const
 
 int DrawnObject::FindObjectAtCoordinates(const float x, const float y)
 {
+	int tempX = static_cast<int>(floorf(x)) + 16;
+	int tempY = static_cast<int>(floorf(y)) + 9;
+
 	for (const auto obj : objects)
 	{
-		if (static_cast<int>(ceilf(x)) == obj->uniformPosition->x)
+
+		if (tempX == obj->uniformPosition->x)
 		{
-			if (static_cast<int>(ceilf(y)) == obj->uniformPosition->y)
+			if (tempY == obj->uniformPosition->y)
 			{
 				return obj->index;
 			}

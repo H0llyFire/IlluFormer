@@ -13,12 +13,8 @@ Player::~Player()
 
 bool Player::PollPlayerEvents()
 {
-	if (!(isMovingDown || isMovingRight || isMovingLeft || isMovingUp)) player->isMoving = false;
-	if (isMoving)
-	{
-		MoveEntity();
-	}
 	PollEntityEvents();
+	PrintStatus();
 	return false;
 }
 
@@ -28,16 +24,10 @@ void Player::StartMovement(const Direction direction)
 	switch (direction)
 	{
 		case Direction::RIGHT:
-			isMovingRight = true;
+			isMovingInDirection[static_cast<int>(Direction::RIGHT)] = true;
 			break;
 		case Direction::LEFT:
-			isMovingLeft = true;
-			break;
-		case Direction::UP:
-			isMovingUp = true;
-			break;
-		case Direction::DOWN:
-			isMovingDown = true;
+			isMovingInDirection[static_cast<int>(Direction::LEFT)] = true;
 			break;
 	}
 }
@@ -47,19 +37,15 @@ void Player::StopMovement(Direction direction)
 	switch (direction)
 	{
 	case Direction::RIGHT:
-		isMovingRight = false;
+		isMovingInDirection[static_cast<int>(Direction::RIGHT)] = false;
 		break;
 	case Direction::LEFT:
-		isMovingLeft = false;
-		break;
-	case Direction::UP:
-		isMovingUp = false;
-		break;
-	case Direction::DOWN:
-		isMovingDown = false;
+		isMovingInDirection[static_cast<int>(Direction::LEFT)] = false;
 		break;
 	}
 }
+
+
 
 Player* Player::GetPlayerPtr()
 {

@@ -4,7 +4,7 @@
 
 bool Loader::LoadWindow()
 {
-	WindowUI::CreateWindow(1600, 900, 1);
+	WindowUI::CreateWindow(1600, 900, 0);
 	return false;
 }
 

@@ -39,7 +39,6 @@ Level::Level(std::string filepath)
 		}
 	}
 
-	
 }
 
 bool Level::Load(const Shader& shader)

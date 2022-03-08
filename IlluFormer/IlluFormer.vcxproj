@@ -184,7 +184,10 @@
     <ClInclude Include="code\WindowUI.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="res\level\info.level" />
+    <None Include="res\level\test.level" />
     <None Include="res\shaders\Basic.shader" />
+    <None Include="res\textures\textures.dat" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\textures\2.png" />
@@ -192,7 +195,11 @@
     <Image Include="res\textures\4.png" />
     <Image Include="res\textures\5.png" />
     <Image Include="res\textures\6.png" />
+    <Image Include="res\textures\Background.png" />
+    <Image Include="res\textures\Coin.png" />
+    <Image Include="res\textures\Enemy.png" />
     <Image Include="res\textures\Player.png" />
+    <Image Include="res\textures\Wall.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

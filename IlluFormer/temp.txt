@@ -1,0 +1,79 @@
+for (int i = 0; i < 4; ++i)
+	{
+		//const int tempPtA = UniformCoordsAfterMove[i][i % 2 == 0 ? 0 : 1];
+		//const int tempPtB = UniformCoordsAfterMove[i+1 == 4 ? 0 : i+1][i % 2 == 0 ? 0 : 1];
+
+		const int tempPtA = UniformCoordsAfterMove[i % 2 == 0 ? 2*i-1 : 2*i];
+		const int tempPtB = UniformCoordsAfterMove[i % 2 == 0 ? 2 * (i + 1) - 1 : 2 * (i+1)];
+		if (i % 2 == 0)
+		{
+			int const index = DrawnObject::FindObjectAtCoordinates(tempPtA, UniformCoordsAfterMove[i][i % 2 == 0 ? 1 : 0]);
+			if (index >= 0 && DrawnObject::objects[index]->isSolid)
+			{
+				i == 0 ? isBlockedInDirection[DOWN] = true : isBlockedInDirection[static_cast<int>(Direction::UP)] = true;
+				i == 0 ? isOnGround = true : true;
+			}
+			else
+			{
+				i == 0 ? isBlockedInDirection[DOWN] = false : isBlockedInDirection[static_cast<int>(Direction::UP)] = false;
+				i == 0 ? isOnGround = false : true;
+			}
+		}
+		else
+		{
+			int const index = DrawnObject::FindObjectAtCoordinates(UniformCoordsAfterMove[i][i % 2 == 0 ? 1 : 0], tempPtA);
+			if (index >= 0 && DrawnObject::objects[index]->isSolid)
+			{
+				i == 1 ? isBlockedInDirection[static_cast<int>(Direction::RIGHT)] = true : isBlockedInDirection[static_cast<int>(Direction::LEFT)] = true;
+				currentSpeedBonus = 0.0f;
+			}
+			else
+			{
+				i == 1 ? isBlockedInDirection[static_cast<int>(Direction::RIGHT)] = false : isBlockedInDirection[static_cast<int>(Direction::LEFT)] = false;
+				
+			}
+		}
+
+		if (tempPtA != tempPtB)
+		{
+			if (i % 2 == 0)
+			{
+				int const index = DrawnObject::FindObjectAtCoordinates(tempPtB, UniformCoordsAfterMove[i == 3 ? 0 : i+1][i % 2 == 0 ? 1 : 0]);
+				if (index >= 0 && DrawnObject::objects[index]->isSolid)
+				{
+					if(i==0)
+					{
+						isBlockedInDirection[static_cast<int>(Direction::DOWN)] = true;
+						isOnGround = true;
+					}
+					else { isBlockedInDirection[static_cast<int>(Direction::UP)] = true; }
+				}
+				else
+				{
+					if (i == 1)
+					{
+						if (isBlockedInDirection[static_cast<int>(Direction::DOWN)] == true)
+						{
+							isBlockedInDirection[static_cast<int>(Direction::DOWN)] = false;
+							isOnGround = false;
+						}
+					}
+					else { isBlockedInDirection[static_cast<int>(Direction::UP)] == true ? false : isBlockedInDirection[static_cast<int>(Direction::UP)] = false; }
+				}
+			}
+			else
+			{
+				int const index = DrawnObject::FindObjectAtCoordinates(UniformCoordsAfterMove[i == 3 ? 0 : i][i % 2 == 0 ? 1 : 0], tempPtB);
+				if (index >= 0 && DrawnObject::objects[index]->isSolid)
+				{
+					i == 1 ? isBlockedInDirection[static_cast<int>(Direction::RIGHT)] = true : isBlockedInDirection[static_cast<int>(Direction::LEFT)] = true;
+					currentSpeedBonus = 0.0f;
+				}
+				else
+				{
+					if (i == 1) { isBlockedInDirection[static_cast<int>(Direction::RIGHT)] == true ? false : isBlockedInDirection[static_cast<int>(Direction::RIGHT)] = false; }
+					else { isBlockedInDirection[static_cast<int>(Direction::LEFT)] == true ? false : isBlockedInDirection[static_cast<int>(Direction::LEFT)] = false; }
+				}
+			}
+		}
+	}

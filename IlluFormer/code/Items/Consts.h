@@ -1,12 +1,12 @@
 #pragma once
 #include "../Graphics/Texture.h"
 
-enum class Direction
+enum Direction
 {
-	RIGHT = 0,
-	LEFT = 1,
+	DOWN = 0,
+	RIGHT = 1,
 	UP = 2,
-	DOWN = 3
+	LEFT = 3
 };
 enum class EntityType
 {

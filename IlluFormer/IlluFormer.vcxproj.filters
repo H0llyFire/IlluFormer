@@ -125,6 +125,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shaders\Basic.shader" />
+    <None Include="res\textures\textures.dat" />
+    <None Include="res\level\test.level" />
+    <None Include="res\level\info.level" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\textures\2.png">
@@ -143,6 +146,18 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="res\textures\Player.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\textures\Enemy.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\textures\Coin.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\textures\Wall.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\textures\Background.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>
