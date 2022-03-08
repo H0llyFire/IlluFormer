@@ -4,8 +4,11 @@
 
 
 Entity::Entity(EntityType type, DrawnObject* object)
-	: isOnGround(false), currentSpeedBonus(0.0f), tick(0), typeName(type), sprite(object), isMoving(false), isMidJump(false), jumpVelocity(0.0f)
+	: isOnGround(false), jumpVelocity(0.0f), jumpTick(0), tick(0), typeName(type), sprite(object), isMoving(false), isJumping(0), isMidJump(false)
 {
+	const float* positions = object->GetPosition();
+	for (int i = 0; i < 16; ++i)
+		defaultPosition[i] = positions[i];
 	for(int i = 0; i<4; ++i)
 	{
 		isMovingInDirection[i] = false;
@@ -45,10 +48,12 @@ Entity::Entity(EntityType type, DrawnObject* object)
 
 Entity::~Entity()
 {
+	delete[] defaultPosition;
 }
 
 bool Entity::PollEntityEvents()
 {
+	if (isJumping) Jump();
 	if (isMoving)
 	{
 		if (isMovingInDirection[LEFT]) { velocity[LEFT] += 0.01f; }
@@ -80,7 +85,7 @@ bool Entity::PollEntityEvents()
 	}
 
 	tick++;
-
+	jumpTick++;
 	return false;
 }
 
@@ -134,7 +139,7 @@ bool Entity::SetVelocity(float speed, Direction direction)
 
 
 int Entity::GetCollisionIndex(float posX, float posY, int direction, int directionCorner)
-{ //BUG WORKS LIKE 95%, walking in single block wide corridors is impossible
+{ //BUG WORKS LIKE 95%, walking in single block wide corridors is impossible, jumping into corners still bug the shit out of the player
 	float tempX = posX;
 	float tempY = posY;
 	switch (direction)
@@ -191,6 +196,7 @@ void Entity::OverrideVelocity()
 			velocity[i] = overrideVelocity[i];
 			overrideVelocity[i] = 0.0f;
 			isMoving = true;
+			if (i == UP) jumpVelocity = 0.0f;
 		}
 	}
 }
@@ -213,22 +219,41 @@ bool Entity::CheckCollisions() //W.I.P
 	OverrideVelocity();
 	return true;
 }
+
+void Entity::ResetPosition()
+{
+	sprite->ChangePosition(defaultPosition);
+}
+
 void Entity::Jump()
 {
-	if (isOnGround) 
+	if (isOnGround)
 	{
-		jumpVelocity = 0.5f;
+		jumpVelocity = 0.23f;
 		isMidJump = true;
 		isMoving = true;
 	}
-	// BUG jumping off of any tile entity
+	//else if (isMidJump && jumpTick < 10);
 }
 
 void Entity::SetGravity()
 {
 	//if (isOnGround)
 		//velocity[DOWN] = 0.0f;
-	if (velocity[DOWN] <= 0.0f)
+	if (jumpVelocity > 0.0f)
+	{
+		if (jumpTick >=3)
+		{
+			jumpTick = 0;
+			jumpVelocity -= 0.02f;
+			if (jumpVelocity <= 0.0f)
+			{
+				jumpVelocity = 0.0f;
+				isMidJump = false;
+			}
+		}
+	}
+	else if (velocity[DOWN] <= 0.0f)
 	{
 		velocity[DOWN] = 0.02f;
 		isMoving = true;
@@ -242,15 +267,6 @@ void Entity::SetGravity()
 	if (velocity[DOWN] > maxSpeed)
 		velocity[DOWN] = maxSpeed;
 
-	if (jumpVelocity > 0.0f)
-	{
-		jumpVelocity -= 0.04f;
-		if (jumpVelocity <= 0.0f)
-		{
-			jumpVelocity = 0.0f;
-			isMidJump = false;
-		}
-	}
 }
 void Entity::SetGravity(float modifier)
 {
@@ -273,6 +289,7 @@ void Entity::PrintStatus()
 	std::cout << "Is Moving: " << isMoving << std::endl;
 	std::cout << "Position: " << sprite->GetPosition()[0] << " " << sprite->GetPosition()[1] << std::endl;
 	std::cout << std::setprecision(9) << "Velocity D: " << velocity[DOWN] << " R: " << velocity[RIGHT] << " U: " << velocity[UP] << " L: " << velocity[LEFT] << std::endl;
+	std::cout << "Jump Velocity: " << jumpVelocity << " Jump Tick: " << jumpTick << std::endl;
 	for (int i = 0; i < 4; ++i)
 		{ std::cout << std::setprecision(9) << "Point " << i << ":  " << positions[4 * i] << "; " << positions[4 * i + 1] << std::endl; }
 	std::cout << std::endl;

@@ -46,7 +46,6 @@ void Player::StopMovement(Direction direction)
 }
 
 
-
 Player* Player::GetPlayerPtr()
 {
 	return player;

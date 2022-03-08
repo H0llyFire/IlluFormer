@@ -21,59 +21,26 @@
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
     if (key == GLFW_KEY_A && action == GLFW_PRESS)
-    {
-        //std::cout << "Pressed A" << std::endl;
         Player::GetPlayerPtr()->StartMovement(Direction::LEFT);
-    }
     else if (key == GLFW_KEY_A && action == GLFW_RELEASE)
-    {
-        //std::cout << "Released A" << std::endl;
         Player::GetPlayerPtr()->StopMovement(Direction::LEFT);
-    }
+
     else if (key == GLFW_KEY_D && action == GLFW_PRESS)
-    {
-        //std::cout << "Pressed D" << std::endl;
         Player::GetPlayerPtr()->StartMovement(Direction::RIGHT);
-    }
     else if (key == GLFW_KEY_D && action == GLFW_RELEASE)
-    {
-        //std::cout << "Released D" << std::endl;
         Player::GetPlayerPtr()->StopMovement(Direction::RIGHT);
-    }
-    else if (key == GLFW_KEY_W && action == GLFW_PRESS)
-    {
-        //std::cout << "Pressed W" << std::endl;
-        //Player::GetPlayerPtr()->StartMovement(Direction::UP);
-    }
-    else if (key == GLFW_KEY_W && action == GLFW_RELEASE)
-    {
-        //std::cout << "Released W" << std::endl;
-        //Player::GetPlayerPtr()->StopMovement(Direction::UP);
-    }
-    else if (key == GLFW_KEY_S && action == GLFW_PRESS)
-    {
-        //std::cout << "Pressed S" << std::endl;
-        //Player::GetPlayerPtr()->StartMovement(Direction::DOWN);
-    }
-    else if (key == GLFW_KEY_S && action == GLFW_RELEASE)
-    {
-        //std::cout << "Released S" << std::endl;
-        //Player::GetPlayerPtr()->StopMovement(Direction::DOWN);
-    }
+
     else if (key == GLFW_KEY_SPACE && action == GLFW_PRESS)
-    {
-        Player::GetPlayerPtr()->Jump();
-        //std::cout << "Pressed Space" << std::endl;
-    }
+        Player::GetPlayerPtr()->isJumping = true;
     else if (key == GLFW_KEY_SPACE && action == GLFW_RELEASE)
-    {
-        //Player::GetPlayerPtr()->Jump();
-        //std::cout << "Pressed Space" << std::endl;
-    }
+        Player::GetPlayerPtr()->isJumping = false;
+
     else if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
     {
-        //std::cout << "Pressed Escape" << std::endl;
     }
+
+    else if (key == GLFW_KEY_R && action == GLFW_PRESS)
+        Player::GetPlayerPtr()->ResetPosition();
 }
 
 bool GameLoop::StartLoop()

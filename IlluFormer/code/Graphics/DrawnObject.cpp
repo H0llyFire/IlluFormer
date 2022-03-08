@@ -37,8 +37,11 @@ bool DrawnObject::DrawObject()
 
 bool DrawnObject::ChangePosition(float* pos)
 {
-	delete[] position;
-	position = pos;
+	for (int i = 0; i < 16; ++i)
+	{
+		position[i] = pos[i];
+	}
+
 	return false;
 }
 

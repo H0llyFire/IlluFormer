@@ -10,8 +10,8 @@ private:
 	int health;
 	float maxSpeed;
 	float minSpeed;
-	float currentSpeedBonus;
 	float jumpVelocity;
+	unsigned int jumpTick;
 	unsigned int tick;
 
 	float velocity[4]{};
@@ -20,9 +20,10 @@ private:
 	Direction facing;
 	DrawnObject* sprite;
 
-
+	float defaultPosition[16]{};
 public:
 	bool isMoving;
+	bool isJumping;
 	bool isMidJump;
 	bool isMovingInDirection[4]{};
 	bool isBlockedInDirection[4]{};
@@ -40,6 +41,7 @@ public:
 	void OverrideVelocity();
 	bool CheckCollisions();
 
+	void ResetPosition();
 	void Jump();
 	void SetGravity();
 	void SetGravity(float modifier);
