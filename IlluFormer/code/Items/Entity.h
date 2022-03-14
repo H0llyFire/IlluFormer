@@ -1,59 +1,60 @@
 #pragma once
 #include "../Graphics/DrawnObject.h"
 #include "Consts.h"
-#include <vector>
 
 class Entity
 {
 private:
-	bool isOnGround;
 	int health;
 	float maxSpeed;
 	float minSpeed;
 	float jumpVelocity;
+	float overrideVelocity[4]{};
+	float defaultPosition[16]{};
+protected:
+	bool isOnGround;
 	unsigned int jumpTick;
 	unsigned int tick;
-
 	float velocity[4]{};
-	float overrideVelocity[4]{};
 	EntityType typeName;
 	Direction facing;
 	DrawnObject* sprite;
-
-	float defaultPosition[16]{};
 public:
+	int ownerIndex;
 	bool isMoving;
 	bool isJumping;
 	bool isMidJump;
 	bool isMovingInDirection[4]{};
 	bool isBlockedInDirection[4]{};
 
-	Entity(EntityType type, DrawnObject* object);
+	Entity(EntityType type, DrawnObject* object, int levelIndex);
 	~Entity();
+
 	bool PollEntityEvents();
 	bool MoveEntity();
 	bool MoveEntity(Direction direction);
-
 	bool ChangeVelocity(float speed, Direction direction);
 	bool SetVelocity(float speed, Direction direction);
+
 	int GetCollisionIndex(float posX, float posY, int direction, int directionCorner);
 	bool CheckBlock(int direction, int blockIndex, float position);
 	void OverrideVelocity();
 	bool CheckCollisions();
+	bool CheckEntityCollisions();
+	bool CheckOutOfBounds() const;
 
 	void ResetPosition();
 	void Jump();
 	void SetGravity();
 	void SetGravity(float modifier);
 	void SetJumpVelocity();
-	void SetCollision(int i, int ptA, int ptB, int* afterMoveCords);
 	void PrintStatus();
 
 	bool UnloadEntity(const int index);
 
-	static std::vector<Entity*> entityList;
+	//static std::vector<Entity*> entityList;
 
 	static bool PollEntitiesEvents();
-	static int CreateEntity(EntityType type, DrawnObject* object);
+	static int CreateEntity(EntityType type, DrawnObject* object, int levelIndex);
 	static bool UnloadAll();
 };

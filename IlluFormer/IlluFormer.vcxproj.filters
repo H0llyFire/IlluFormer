@@ -128,6 +128,9 @@
     <None Include="res\textures\textures.dat" />
     <None Include="res\level\test.level" />
     <None Include="res\level\info.level" />
+    <None Include="res\level\2.level" />
+    <None Include="res\level\0.level" />
+    <None Include="res\level\1.level" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\textures\2.png">
@@ -158,6 +161,54 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="res\textures\Background.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\textures\CharJumpLeft.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\textures\CharJumpRight.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\textures\CharWalkLeft.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\textures\CharWalkRight.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\textures\ExitButton.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\textures\ExitButtonHover.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\textures\Flag.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\textures\Ground.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\textures\MenuButton.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\textures\MenuButtonHover.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\textures\RestartButton.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\textures\RestartButtonHover.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\textures\StartButton.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\textures\StartButtonHover.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\textures\Unknown.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\textures\DarkenBG.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

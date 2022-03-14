@@ -1,4 +1,5 @@
 #include "Texture.h"
+#include "../Items/Consts.h"
 
 #include "stb_image/stb_image.h"
 #include "fstream"
@@ -55,18 +56,21 @@ void TextureList::ClearTextures()
 {
 	for (auto texture : textures)
 	{
-		delete(texture);
+		delete texture;
 	}
+	textures.clear();
 }
 
 Texture* TextureList::EvalTextureName(std::string name)
 {
 	if (name == "Player") { return textures[TEXTURE_PLAYER]; }
-	else if (name == "Wall") { return textures[TEXTURE_WALL]; }
-	else if (name == "Coin") { return textures[TEXTURE_COIN]; }
-	else if (name == "Enemy") { return textures[TEXTURE_ENEMY]; }
-	else if (name == "Background") { return textures[TEXTURE_BG]; }
-	else { return textures[TEXTURE_WALL]; }
+	if (name == "Wall") { return textures[TEXTURE_WALL]; }
+	if (name == "Coin") { return textures[TEXTURE_COIN]; }
+	if (name == "Enemy") { return textures[TEXTURE_ENEMY]; }
+	if (name == "Background") { return textures[TEXTURE_BG]; }
+	if (name == "Ground") { return textures[TEXTURE_GROUND]; }
+	if (name == "Flag") { return textures[TEXTURE_FLAG]; }
+	return textures[TEXTURE_UNKNOWN];
 }
 
 std::vector<Texture*> TextureList::textures{};

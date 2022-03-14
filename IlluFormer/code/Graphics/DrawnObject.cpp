@@ -1,18 +1,19 @@
 #include "DrawnObject.h"
 
-DrawnObject::DrawnObject(UniformPosition* uniPos, float* pos, unsigned int posAmount, unsigned int* indis, unsigned int indisAmount, Texture* texture, Shader shader, int index)
+DrawnObject::DrawnObject(UniformPosition* uniPos, float* pos, unsigned int posAmount, unsigned int* indis, unsigned int indisAmount, Texture* texture, Shader* shader, int index)
 	: uniformPosition(uniPos), position(pos), positionsAmount(posAmount), indices(indis), indicesAmount(indisAmount), index(index), texture(texture), currentShader(shader)
 {
 	//position = new float(posAmount);
 	texture->Unbind();
-	if (texture == TextureList::textures[TEXTURE_WALL]) { isSolid = true; }
+	if (texture == TextureList::textures[TEXTURE_WALL] || texture == TextureList::textures[TEXTURE_GROUND]) 
+		{ isSolid = true; }
 	else { isSolid = false; }
 }
 
 DrawnObject::~DrawnObject()
 {
-	delete texture;
 	delete[] position;
+	delete[] uniformPosition;
 	//delete uniformPosition;
 }
 
@@ -29,7 +30,7 @@ bool DrawnObject::DrawObject()
 	VertexBuffer vb(position, positionsAmount * sizeof(float));
 	va.AddBuffer(vb, layout);
 
-	Renderer::Draw(va, ib, currentShader);
+	Renderer::Draw(va, ib, *currentShader);
 
 	texture->Unbind();
 	return false;
@@ -65,13 +66,35 @@ float* DrawnObject::GetPosition() const
 	return position;
 }
 
+int DrawnObject::GetObjectType()
+{
+	for (int i = 0; i < TEXTURE_LAST; ++i)
+	{
+		if (TextureList::textures[i] == texture) return i;
+	}
+	return -1;
+}
 
-int DrawnObject::FindObjectAtCoordinates(const float x, const float y)
+bool DrawnObject::UnloadObject(std::vector<DrawnObject*>* listOfObjects)
+{
+	int tempIndex = index;
+	listOfObjects->erase(listOfObjects->begin() + index);
+	ReIndexList(tempIndex, listOfObjects);
+	return false;
+}
+
+void DrawnObject::SetTexture(TextureName newTexture)
+{
+	texture = TextureList::textures[newTexture];
+}
+
+
+int DrawnObject::FindObjectAtCoordinates(const float x, const float y, std::vector<DrawnObject*>* listOfObjects)
 {
 	int tempX = static_cast<int>(floorf(x)) + 16;
 	int tempY = static_cast<int>(floorf(y)) + 9;
 
-	for (const auto obj : objects)
+	for (const auto obj : *listOfObjects)
 	{
 
 		if (tempX == obj->uniformPosition->x)
@@ -85,9 +108,9 @@ int DrawnObject::FindObjectAtCoordinates(const float x, const float y)
 	return -1;
 }
 
-int DrawnObject::FindObjectAtCoordinates(const int x, const int y)
+int DrawnObject::FindObjectAtCoordinates(const int x, const int y, std::vector<DrawnObject*>* listOfObjects)
 {
-	for (const auto obj : objects)
+	for (const auto obj : *listOfObjects)
 	{
 		if (x == obj->uniformPosition->x)
 		{
@@ -100,25 +123,26 @@ int DrawnObject::FindObjectAtCoordinates(const int x, const int y)
 	return -1;
 }
 
-int DrawnObject::CreateObject(UniformPosition* uniPos, float* pos, unsigned int posAmount, unsigned int* indis, unsigned int indisAmount, Texture* texture, Shader shader)
+bool DrawnObject::UnloadObject(const int index, std::vector<DrawnObject*>* listOfObjects)
 {
-	objects.push_back(new DrawnObject(uniPos, pos, posAmount, indis, indisAmount, texture, shader, count));
-	count += 1;
-	return count - 1;
-}
-
-bool DrawnObject::UnloadObject(const int index)
-{
-
-	objects.erase(objects.begin() + index);
+	listOfObjects->erase(listOfObjects->begin() + index);
+	ReIndexList(index, listOfObjects);
 	return false;
 }
 
-bool DrawnObject::UnloadAll()
+bool DrawnObject::UnloadAll(std::vector<DrawnObject*>* listOfObjects)
 {
-	objects.clear();
+	listOfObjects->clear();
 	return false;
+}
+
+void DrawnObject::ReIndexList(int index, std::vector<DrawnObject*>* listOfObjects)
+{
+	for (unsigned int i = index; i < listOfObjects->size(); ++i)
+	{
+		(*listOfObjects)[i]->index--;
+	}
 }
 
 int DrawnObject::count{ 0 };
-std::vector<DrawnObject*> DrawnObject::objects{};
+//std::vector<DrawnObject*> DrawnObject::objects{};

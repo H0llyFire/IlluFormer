@@ -20,27 +20,43 @@
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-    if (key == GLFW_KEY_A && action == GLFW_PRESS)
-        Player::GetPlayerPtr()->StartMovement(Direction::LEFT);
-    else if (key == GLFW_KEY_A && action == GLFW_RELEASE)
-        Player::GetPlayerPtr()->StopMovement(Direction::LEFT);
-
-    else if (key == GLFW_KEY_D && action == GLFW_PRESS)
-        Player::GetPlayerPtr()->StartMovement(Direction::RIGHT);
-    else if (key == GLFW_KEY_D && action == GLFW_RELEASE)
-        Player::GetPlayerPtr()->StopMovement(Direction::RIGHT);
-
-    else if (key == GLFW_KEY_SPACE && action == GLFW_PRESS)
-        Player::GetPlayerPtr()->isJumping = true;
-    else if (key == GLFW_KEY_SPACE && action == GLFW_RELEASE)
-        Player::GetPlayerPtr()->isJumping = false;
-
-    else if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+    if (Level::GetActiveLevel()!=nullptr)
     {
-    }
+        if (key == GLFW_KEY_A && action == GLFW_PRESS)
+            Player::GetPlayerPtr()->StartMovement(Direction::LEFT);
+        else if (key == GLFW_KEY_A && action == GLFW_RELEASE)
+            Player::GetPlayerPtr()->StopMovement(Direction::LEFT);
 
-    else if (key == GLFW_KEY_R && action == GLFW_PRESS)
-        Player::GetPlayerPtr()->ResetPosition();
+        else if (key == GLFW_KEY_D && action == GLFW_PRESS)
+            Player::GetPlayerPtr()->StartMovement(Direction::RIGHT);
+        else if (key == GLFW_KEY_D && action == GLFW_RELEASE)
+            Player::GetPlayerPtr()->StopMovement(Direction::RIGHT);
+
+        else if (key == GLFW_KEY_SPACE && action == GLFW_PRESS)
+            Player::GetPlayerPtr()->isJumping = true;
+        else if (key == GLFW_KEY_SPACE && action == GLFW_RELEASE)
+            Player::GetPlayerPtr()->isJumping = false;
+
+        else if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+        {
+            Menu::isPauseMenuActive = !Menu::isPauseMenuActive;
+        }
+
+        else if (key == GLFW_KEY_R && action == GLFW_PRESS)
+            Level::GetActiveLevel()->ResetLevel();
+    }
+}
+
+void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
+{
+    if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
+    {
+        double cursorX;
+        double cursorY;
+        glfwGetCursorPos(window, &cursorX, &cursorY);
+        if (Menu::ProcessClick(cursorX, cursorY))
+            glfwSetWindowShouldClose(window, 1);
+    }
 }
 
 bool GameLoop::StartLoop()
@@ -48,28 +64,23 @@ bool GameLoop::StartLoop()
     GLFWwindow* window = WindowUI::GetWindowPtr();
 
     glfwSetKeyCallback(window, key_callback);
+    glfwSetMouseButtonCallback(window, mouse_button_callback);
 
     const glm::mat4 proj = glm::ortho(-16.0f, 16.0f, -9.0f, 9.0f, -1.0f, 1.0f);
 
-    Shader shader("res/shaders/Basic.shader");
-    shader.Bind();
-    shader.SetUniform4f("u_Color", 0.2f, 0.3f, 0.7f, 1.0f);
-    shader.SetUniformMat4f("u_MVP", proj);
+    Shader* shader = new Shader("res/shaders/Basic.shader");
+    shader->Bind();
+    shader->SetUniform4f("u_Color", 0.2f, 0.3f, 0.7f, 1.0f);
+    shader->SetUniformMat4f("u_MVP", proj);
 
     Coordinates::SetGridIndices();
 
-    const int playerIndex = DrawnObject::CreateObject(new UniformPosition{1,10}, Coordinates::SnapToGrid(1, 10), 16, Coordinates::GetGridIndices(), 6, TextureList::textures[TEXTURE_PLAYER], shader);
-
-	Level test("test.level");
-    test.Load(shader);
-
-    Player player(DrawnObject::objects[playerIndex]);
+    Menu::InitMenus(shader);
 
     auto timePtOne = std::chrono::system_clock::now();
 
     while (!glfwWindowShouldClose(window))
-    {
-        //TODO SETUP CHRONO CLOCK TIMER WITH NO VSYNC
+    { //TODO FORMAT LEVELS AS SPEEDRUN, END RESULTS: TIME, DEATHS, COLLECTED COINS.
 
         auto timePtTwo = std::chrono::system_clock::now();
         auto time = std::chrono::duration_cast<std::chrono::microseconds>(timePtTwo - timePtOne).count();
@@ -77,35 +88,60 @@ bool GameLoop::StartLoop()
     	if (time > (1000000 / FPS_LIMIT))
         {
             Renderer::Clear();
+            Level::InitLevels(shader);
+            //test.Render();
+            if (Level::GetActiveLevel() == nullptr)
+            {
+                double cursorX;
+                double cursorY;
+                glfwGetCursorPos(window, &cursorX, &cursorY);
+                Menu::ShowMainMenu(cursorX, cursorY);
+            }
+            else
+            {
+                Level::GetActiveLevel()->Render();
+                if(Menu::isPauseMenuActive)
+                {
+                    double cursorX;
+                    double cursorY;
+                    glfwGetCursorPos(window, &cursorX, &cursorY);
+                    Menu::ShowPauseMenu(cursorX, cursorY);
+                }
+                else if(Menu::isEndMenuActive)
+                {
+                    double cursorX;
+                    double cursorY;
+                    glfwGetCursorPos(window, &cursorX, &cursorY);
+                    Menu::ShowEndMenu(cursorX, cursorY);
+                }
+                else
+                {
+                    Player::GetPlayerPtr()->PollPlayerEvents();
+                    Entity::PollEntitiesEvents();
+                }
+            }
 
-            test.Render();
-            DrawnObject::objects[playerIndex]->DrawObject();
-
-            player.PollPlayerEvents();
-            Entity::PollEntitiesEvents();
-
-            GLCall(glfwSwapBuffers(window));
-			GLCall(glfwPollEvents());
+            GLCall(glfwSwapBuffers(window))
+			GLCall(glfwPollEvents())
 
             timePtOne = timePtTwo;
         }
     }
 
-    glfwTerminate();
-    DrawnObject::UnloadAll();
-    Entity::UnloadAll();
-    TextureList::ClearTextures();
     Coordinates::clearCoords();
-	return false;
+    Level::UnloadAllLevels();
+    Menu::UnloadMenus();
+    TextureList::ClearTextures();
+    delete shader;
+    glfwTerminate();
+	return false;                 
 }
 
 
-
 /*TODO
-	Gravity
-	Basic enemy AI
 	Screen scroll?
 	Main Menu
-	Collisions
-	Acceleration and Deceleration
+	Level Move
+	Level Select?
+	Stats
 */

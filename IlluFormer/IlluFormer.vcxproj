@@ -184,6 +184,9 @@
     <ClInclude Include="code\WindowUI.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="res\level\0.level" />
+    <None Include="res\level\1.level" />
+    <None Include="res\level\2.level" />
     <None Include="res\level\info.level" />
     <None Include="res\level\test.level" />
     <None Include="res\shaders\Basic.shader" />
@@ -196,9 +199,25 @@
     <Image Include="res\textures\5.png" />
     <Image Include="res\textures\6.png" />
     <Image Include="res\textures\Background.png" />
+    <Image Include="res\textures\CharJumpLeft.png" />
+    <Image Include="res\textures\CharJumpRight.png" />
+    <Image Include="res\textures\CharWalkLeft.png" />
+    <Image Include="res\textures\CharWalkRight.png" />
     <Image Include="res\textures\Coin.png" />
+    <Image Include="res\textures\DarkenBG.png" />
     <Image Include="res\textures\Enemy.png" />
+    <Image Include="res\textures\ExitButton.png" />
+    <Image Include="res\textures\ExitButtonHover.png" />
+    <Image Include="res\textures\Flag.png" />
+    <Image Include="res\textures\Ground.png" />
+    <Image Include="res\textures\MenuButton.png" />
+    <Image Include="res\textures\MenuButtonHover.png" />
     <Image Include="res\textures\Player.png" />
+    <Image Include="res\textures\RestartButton.png" />
+    <Image Include="res\textures\RestartButtonHover.png" />
+    <Image Include="res\textures\StartButton.png" />
+    <Image Include="res\textures\StartButtonHover.png" />
+    <Image Include="res\textures\Unknown.png" />
     <Image Include="res\textures\Wall.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

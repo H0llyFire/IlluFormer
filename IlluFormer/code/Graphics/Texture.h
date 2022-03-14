@@ -3,14 +3,7 @@
 #include "Renderer.h"
 #include <vector>
 
-enum TextureName
-{
-	TEXTURE_PLAYER = 0,
-	TEXTURE_WALL = 1,
-	TEXTURE_COIN = 2,
-	TEXTURE_ENEMY = 3,
-	TEXTURE_BG = 4
-};
+
 
 class Texture
 {
@@ -44,13 +37,3 @@ public:
 	static void ClearTextures();
 	static Texture* EvalTextureName(std::string name);
 };
-
-/*
-TEXTURE_PLAYER = 0
-TEXTURE_BRICK = 1
-TEXTURE_COIN = 2
-TEXTURE_ENEMY = 3
-
-
-a list of textures to save memory on drawing them
- */
