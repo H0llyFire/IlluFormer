@@ -8,6 +8,10 @@ DrawnObject::DrawnObject(UniformPosition* uniPos, float* pos, unsigned int posAm
 	if (texture == TextureList::textures[TEXTURE_WALL] || texture == TextureList::textures[TEXTURE_GROUND]) 
 		{ isSolid = true; }
 	else { isSolid = false; }
+	if (texture == TextureList::textures[TEXTURE_SPIKE_UP] || texture == TextureList::textures[TEXTURE_SPIKE_RIGHT] || texture == TextureList::textures[TEXTURE_SPIKE_DOWN] || texture == TextureList::textures[TEXTURE_SPIKE_LEFT])
+		isDeadly = true;
+	else
+		isDeadly = false;
 }
 
 DrawnObject::~DrawnObject()

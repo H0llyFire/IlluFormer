@@ -73,8 +73,8 @@ bool Entity::PollEntityEvents()
 		if (velocity[UP] > 0.0f) velocity[UP] = 0.0f;
 	}
 	//else if (velocity[DOWN] != 0.0f || velocity[RIGHT] != 0.0f || velocity[UP] != 0.0f || velocity[LEFT] != 0.0f) std::cout << "ERROR IN VELOCITY MANAGEMENT" << std::endl << std::endl << std::endl << std::endl;
-
-	SetGravity();
+	if(TextureList::textures[sprite->GetObjectType()] != TextureList::textures[TEXTURE_ENEMY])
+		SetGravity();
 	SetJumpVelocity();
 	CheckCollisions();
 
@@ -222,6 +222,10 @@ bool Entity::CheckBlock(int direction, int blockIndex, float position)
 	{
 		Player::GetPlayerPtr()->CollectCoin(Level::levelList[ownerIndex]->objects[blockIndex]);
 	}
+	else if (Level::levelList[ownerIndex]->objects[blockIndex]->isDeadly && typeName == EntityType::PLAYER)
+	{
+		Level::GetActiveLevel()->ResetLevel();
+	}
 	else if(Level::levelList[ownerIndex]->objects[blockIndex]->GetObjectType() == TEXTURE_FLAG && typeName==EntityType::PLAYER)
 	{
 		int newLevel = Level::GetActiveLevel()->index+1;
@@ -305,6 +309,11 @@ bool Entity::CheckOutOfBounds() const
 void Entity::ResetPosition()
 {
 	sprite->ChangePosition(defaultPosition);
+	if (typeName == EntityType::GHOST)
+	{
+		isMovingInDirection[RIGHT] = false;
+		isMovingInDirection[LEFT] = true;
+	}
 }
 
 void Entity::Jump()

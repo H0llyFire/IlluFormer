@@ -70,6 +70,10 @@ Texture* TextureList::EvalTextureName(std::string name)
 	if (name == "Background") { return textures[TEXTURE_BG]; }
 	if (name == "Ground") { return textures[TEXTURE_GROUND]; }
 	if (name == "Flag") { return textures[TEXTURE_FLAG]; }
+	if (name == "SpikeUp") { return textures[TEXTURE_SPIKE_UP]; }
+	if (name == "SpikeRight") { return textures[TEXTURE_SPIKE_RIGHT]; }
+	if (name == "SpikeDown") { return textures[TEXTURE_SPIKE_DOWN]; }
+	if (name == "SpikeLeft") { return textures[TEXTURE_SPIKE_LEFT]; }
 	return textures[TEXTURE_UNKNOWN];
 }
 

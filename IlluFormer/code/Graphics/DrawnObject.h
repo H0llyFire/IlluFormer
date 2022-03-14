@@ -20,7 +20,7 @@ private:
 
 public:
 	bool isSolid;
-	bool isInteractable;
+	bool isDeadly;
 
 	DrawnObject(UniformPosition* uniPos, float* pos, unsigned int posAmount, unsigned int* indis, unsigned int indisAmount, Texture* texture, Shader* shader, int index);
 	~DrawnObject();

@@ -191,6 +191,10 @@
     <None Include="res\level\test.level" />
     <None Include="res\shaders\Basic.shader" />
     <None Include="res\textures\textures.dat" />
+    <None Include="res\Tiled\IlluFormerSprites.tsx" />
+    <None Include="res\Tiled\map1..tmj" />
+    <None Include="res\Tiled\map1.tmx" />
+    <None Include="res\Tiled\map2.tmx" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\textures\2.png" />
@@ -199,8 +203,18 @@
     <Image Include="res\textures\5.png" />
     <Image Include="res\textures\6.png" />
     <Image Include="res\textures\Background.png" />
+    <Image Include="res\textures\BackgroundMenu.png" />
+    <Image Include="res\textures\CharJump.png" />
     <Image Include="res\textures\CharJumpLeft.png" />
     <Image Include="res\textures\CharJumpRight.png" />
+    <Image Include="res\textures\CharWalkFrame0.png" />
+    <Image Include="res\textures\CharWalkFrame1.png" />
+    <Image Include="res\textures\CharWalkFrame2.png" />
+    <Image Include="res\textures\CharWalkFrame3.png" />
+    <Image Include="res\textures\CharWalkFrame4.png" />
+    <Image Include="res\textures\CharWalkFrame5.png" />
+    <Image Include="res\textures\CharWalkFrame6.png" />
+    <Image Include="res\textures\CharWalkFrame7.png" />
     <Image Include="res\textures\CharWalkLeft.png" />
     <Image Include="res\textures\CharWalkRight.png" />
     <Image Include="res\textures\Coin.png" />
@@ -217,6 +231,7 @@
     <Image Include="res\textures\RestartButtonHover.png" />
     <Image Include="res\textures\StartButton.png" />
     <Image Include="res\textures\StartButtonHover.png" />
+    <Image Include="res\textures\TextGJ.png" />
     <Image Include="res\textures\Unknown.png" />
     <Image Include="res\textures\Wall.png" />
   </ItemGroup>

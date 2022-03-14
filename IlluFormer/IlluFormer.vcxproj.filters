@@ -131,6 +131,10 @@
     <None Include="res\level\2.level" />
     <None Include="res\level\0.level" />
     <None Include="res\level\1.level" />
+    <None Include="res\Tiled\IlluFormerSprites.tsx" />
+    <None Include="res\Tiled\map1..tmj" />
+    <None Include="res\Tiled\map1.tmx" />
+    <None Include="res\Tiled\map2.tmx" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\textures\2.png">
@@ -209,6 +213,39 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="res\textures\DarkenBG.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\textures\BackgroundMenu.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\textures\CharJump.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\textures\CharWalkFrame0.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\textures\CharWalkFrame1.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\textures\CharWalkFrame2.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\textures\CharWalkFrame3.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\textures\CharWalkFrame4.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\textures\CharWalkFrame5.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\textures\CharWalkFrame6.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\textures\CharWalkFrame7.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\textures\TextGJ.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

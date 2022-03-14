@@ -126,6 +126,7 @@ Premade
 14;9;Player
 19;9;Wall
 23;9;Wall
+24;9;SpikeDown
 31;9;Wall
 0;8;Wall
 4;8;Wall
@@ -135,6 +136,7 @@ Premade
 15;8;Wall
 19;8;Wall
 22;8;Wall
+23;8;SpikeDown
 31;8;Wall
 0;7;Wall
 4;7;Wall
@@ -155,7 +157,7 @@ Premade
 4;5;Wall
 5;5;Coin
 8;5;Enemy
-16;5;Enemy
+12;5;Enemy
 19;5;Wall
 20;5;Wall
 22;5;Enemy
