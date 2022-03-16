@@ -233,7 +233,7 @@ bool Entity::CheckBlock(int direction, int blockIndex, float position)
 		{
 				
 		}
-		else if (newLevel == 3)
+		else if (newLevel == 5)
 		{
 			Menu::isEndMenuActive = true;
 		}
@@ -271,7 +271,8 @@ bool Entity::CheckCollisions() //W.I.P
 			int index = GetCollisionIndex(position[((direction+n==4?-1:direction) + n) * 4], position[((direction + n == 4 ? -1 : direction) + n) * 4 + 1], direction, n);
 			if(index>=0)
 			{
-				CheckBlock(direction, index, position[direction * 4 + (direction + 1) % 2]);
+				if (!CheckBlock(direction, index, position[direction * 4 + (direction + 1) % 2]))
+					break;
 			}
 		}
 	}
@@ -309,11 +310,20 @@ bool Entity::CheckOutOfBounds() const
 void Entity::ResetPosition()
 {
 	sprite->ChangePosition(defaultPosition);
+	isMidJump = false;
+	jumpVelocity = 0.0f;
+	for (int i = DOWN; i <= LEFT; ++i)
+	{
+		velocity[i] = 0.0f;
+		overrideVelocity[i] = 0.0f;
+	}
 	if (typeName == EntityType::GHOST)
 	{
 		isMovingInDirection[RIGHT] = false;
 		isMovingInDirection[LEFT] = true;
 	}
+	jumpTick = 0;
+	tick = 0;
 }
 
 void Entity::Jump()

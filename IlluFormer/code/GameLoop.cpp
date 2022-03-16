@@ -44,6 +44,12 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 
         else if (key == GLFW_KEY_R && action == GLFW_PRESS)
             Level::GetActiveLevel()->ResetLevel();
+        else if(key == GLFW_KEY_TAB && action == GLFW_PRESS)
+        {
+            int newLevel = Level::GetActiveLevel()->index + 1;
+            new Level{ (std::to_string(newLevel)) + ".level" };
+            Level::SetActiveLevel(newLevel);
+        }
     }
 }
 
@@ -139,9 +145,4 @@ bool GameLoop::StartLoop()
 
 
 /*TODO
-	Screen scroll?
-	Main Menu
-	Level Move
-	Level Select?
-	Stats
 */

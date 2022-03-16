@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.8" tiledversion="1.8.2" name="IlluFormerSprites" tilewidth="256" tileheight="256" tilecount="6" columns="0">
+<tileset version="1.8" tiledversion="1.8.2" name="IlluFormerSprites" tilewidth="256" tileheight="256" tilecount="10" columns="0">
  <grid orientation="orthogonal" width="1" height="1"/>
  <tile id="0" type="Player">
   <properties>
@@ -36,5 +36,17 @@
    <property name="TextureName" value="Wall"/>
   </properties>
   <image width="256" height="256" source="../textures/Wall.png"/>
+ </tile>
+ <tile id="7" type="SpikeDown">
+  <image width="256" height="256" source="../textures/SpikeDown.png"/>
+ </tile>
+ <tile id="8" type="SpikeLeft">
+  <image width="256" height="256" source="../textures/SpikeLeft.png"/>
+ </tile>
+ <tile id="9" type="SpikeRight">
+  <image width="256" height="256" source="../textures/SpikeRight.png"/>
+ </tile>
+ <tile id="10" type="SpikeUp">
+  <image width="256" height="256" source="../textures/SpikeUp.png"/>
  </tile>
 </tileset>
