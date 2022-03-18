@@ -25,7 +25,6 @@ public:
 	bool isJumping;
 	bool isMidJump;
 	bool isMovingInDirection[4]{};
-	bool isBlockedInDirection[4]{};
 
 	Entity(EntityType type, DrawnObject* object, int levelIndex);
 	~Entity();

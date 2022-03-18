@@ -15,10 +15,10 @@ Premade
 12;17;Wall
 13;17;Wall
 14;17;Wall
-15;17;Wall
-16;17;Wall
-17;17;Wall
-18;17;Wall
+15;17;SpikeDown
+16;17;SpikeDown
+17;17;SpikeDown
+18;17;SpikeDown
 19;17;SpikeDown
 20;17;SpikeDown
 21;17;SpikeDown
@@ -35,12 +35,10 @@ Premade
 0;16;Wall
 13;16;Coin
 14;16;Wall
-15;16;SpikeDown
-16;16;SpikeDown
+15;16;Coin
 31;16;Wall
 0;15;Wall
 14;15;Wall
-15;15;Coin
 31;15;Wall
 0;14;Wall
 3;14;Wall
@@ -48,6 +46,7 @@ Premade
 7;14;Wall
 13;14;Wall
 14;14;Wall
+22;14;Wall
 25;14;Wall
 26;14;Wall
 30;14;Wall
@@ -57,7 +56,7 @@ Premade
 13;13;SpikeLeft
 14;13;Wall
 15;13;Wall
-21;13;Wall
+22;13;Wall
 25;13;Wall
 30;13;Enemy
 31;13;Wall
@@ -66,7 +65,7 @@ Premade
 9;12;Enemy
 13;12;SpikeLeft
 14;12;Wall
-21;12;Wall
+22;12;Wall
 25;12;Wall
 31;12;Wall
 0;11;Wall
@@ -80,8 +79,8 @@ Premade
 14;11;Wall
 19;11;SpikeUp
 20;11;SpikeUp
-21;11;Wall
-22;11;SpikeUp
+21;11;SpikeUp
+22;11;Wall
 23;11;SpikeUp
 24;11;SpikeUp
 25;11;Wall
@@ -108,6 +107,8 @@ Premade
 23;10;Wall
 24;10;Wall
 25;10;Wall
+26;10;Wall
+30;10;Wall
 31;10;Wall
 0;9;Wall
 1;9;Wall
@@ -121,7 +122,9 @@ Premade
 14;9;Wall
 17;9;Wall
 25;9;Wall
+26;9;Wall
 28;9;Player
+30;9;Wall
 31;9;Wall
 0;8;Wall
 6;8;Enemy
@@ -133,8 +136,6 @@ Premade
 14;8;Wall
 17;8;Wall
 21;8;Flag
-25;8;Wall
-26;8;Wall
 27;8;Wall
 28;8;Wall
 29;8;Wall
@@ -146,6 +147,8 @@ Premade
 13;7;Wall
 14;7;Wall
 17;7;Wall
+30;7;Wall
+31;7;Wall
 8;6;Wall
 9;6;Wall
 10;6;Wall
@@ -153,6 +156,8 @@ Premade
 20;6;Wall
 21;6;Wall
 22;6;Wall
+23;6;Wall
+24;6;Wall
 31;6;Coin
 9;5;Wall
 10;5;Wall

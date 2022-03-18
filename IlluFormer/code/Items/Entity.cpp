@@ -14,7 +14,6 @@ Entity::Entity(EntityType type, DrawnObject* object, int levelIndex)
 	for(int i = 0; i<4; ++i)
 	{
 		isMovingInDirection[i] = false;
-		isBlockedInDirection[i] = false;
 		velocity[i] = 0.0f;
 		overrideVelocity[i] = 0.0f;
 	}
@@ -224,7 +223,7 @@ bool Entity::CheckBlock(int direction, int blockIndex, float position)
 	}
 	else if (Level::levelList[ownerIndex]->objects[blockIndex]->isDeadly && typeName == EntityType::PLAYER)
 	{
-		Level::GetActiveLevel()->ResetLevel();
+		return false;
 	}
 	else if(Level::levelList[ownerIndex]->objects[blockIndex]->GetObjectType() == TEXTURE_FLAG && typeName==EntityType::PLAYER)
 	{
@@ -264,6 +263,7 @@ bool Entity::CheckCollisions() //W.I.P
 {
 	const float* position = sprite->GetPosition(); //array of 16 floats, 4 per each point => x;y;position;index
 	isOnGround = false;
+	bool shouldDie = false;
 	for (int direction = DOWN; direction <= LEFT; ++direction)
 	{
 		for (int n = 0; n < 2; ++n)
@@ -272,9 +272,11 @@ bool Entity::CheckCollisions() //W.I.P
 			if(index>=0)
 			{
 				if (!CheckBlock(direction, index, position[direction * 4 + (direction + 1) % 2]))
-					break;
+					shouldDie = true;
 			}
+			if (overrideVelocity[direction]>0.0f || velocity[direction] == 0.0f) shouldDie = false;
 		}
+		if (shouldDie) Level::GetActiveLevel()->ResetLevel();
 	}
 	OverrideVelocity();
 	return true;
