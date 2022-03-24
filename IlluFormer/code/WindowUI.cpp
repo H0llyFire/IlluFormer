@@ -13,21 +13,21 @@ GLFWwindow* WindowUI::GetWindowPtr()
 
 bool WindowUI::CreateWindow(unsigned int width, unsigned int height, unsigned int pollingRate)
 {
-    if (!glfwInit())
-        return true;
+	if (!glfwInit())
+		return true;
 
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    window = glfwCreateWindow(width, height, "Windown", NULL, NULL);
-    if (!window)
-    {
-        glfwTerminate();
-        return true;
-    }
+	window = glfwCreateWindow(width, height, "Windown", NULL, NULL);
+	if (!window)
+	{
+		glfwTerminate();
+		return true;
+	}
 
-    glfwMakeContextCurrent(window);
-    glfwSwapInterval(pollingRate);
-    return false;
+	glfwMakeContextCurrent(window);
+	glfwSwapInterval(pollingRate);
+	return false;
 }

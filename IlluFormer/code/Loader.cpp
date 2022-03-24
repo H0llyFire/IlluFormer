@@ -32,7 +32,6 @@ bool Loader::LoadGlew()
 
 bool Loader::LoadMainMenu()
 {
-
 	return false;
 }
 

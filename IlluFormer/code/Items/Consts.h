@@ -8,12 +8,14 @@ enum Direction
 	UP,
 	LEFT
 };
+
 enum class EntityType
 {
 	PLAYER = 0,
 	GHOST = 1,
 	BLOCK = 2
 };
+
 enum TextureName
 {
 	TEXTURE_PLAYER,
@@ -57,11 +59,13 @@ struct Position
 	float x;
 	float y;
 };
+
 struct UniformPosition
 {
 	int x;
 	int y;
 };
+
 struct Velocity
 {
 	float speedX;

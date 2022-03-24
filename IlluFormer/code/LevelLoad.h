@@ -41,7 +41,7 @@ private:
 	static std::vector<DrawnObject*> mainMenuObjects;
 	static std::vector<DrawnObject*> pauseMenuObjects;
 	static std::vector<DrawnObject*> endMenuObjects;
-	
+
 public:
 	static bool isPauseMenuActive;
 	static bool isEndMenuActive;

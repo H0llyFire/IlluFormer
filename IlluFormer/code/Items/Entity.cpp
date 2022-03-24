@@ -6,12 +6,13 @@
 
 
 Entity::Entity(EntityType type, DrawnObject* object, int levelIndex)
-	: isOnGround(false), jumpVelocity(0.0f), jumpTick(0), tick(0), typeName(type), sprite(object), ownerIndex(levelIndex), isMoving(false), isJumping(0), isMidJump(false)
+	: jumpVelocity(0.0f), isOnGround(false), jumpTick(0), tick(0), typeName(type), sprite(object),
+	  ownerIndex(levelIndex), isMoving(false), isJumping(0), isMidJump(false)
 {
 	const float* positions = object->GetPosition();
 	for (int i = 0; i < 16; ++i)
 		defaultPosition[i] = positions[i];
-	for(int i = 0; i<4; ++i)
+	for (int i = 0; i < 4; ++i)
 	{
 		isMovingInDirection[i] = false;
 		velocity[i] = 0.0f;
@@ -19,39 +20,37 @@ Entity::Entity(EntityType type, DrawnObject* object, int levelIndex)
 	}
 	switch (type)
 	{
-		case EntityType::PLAYER:
-			health = 3;
-			minSpeed = 0.1f;
-			maxSpeed = 0.15f;
-			facing = RIGHT;
-			break;
-		case EntityType::GHOST:
-			health = 1;
-			minSpeed = 0.01f;
-			maxSpeed = 0.04f;
-			facing = LEFT;
-			isMovingInDirection[LEFT] = true;
-			isMoving = true;
-			break;
-		case EntityType::BLOCK:
-			health = -1;
-			minSpeed = 0.1f;
-			maxSpeed = 0.1f;
-			facing = DOWN;
-			break;
-		default:
-			health = 0;
-			minSpeed = 0.0f;
-			maxSpeed = 0.0f;
-			facing = RIGHT;
-			break;
+	case EntityType::PLAYER:
+		health = 3;
+		minSpeed = 0.1f;
+		maxSpeed = 0.15f;
+		facing = RIGHT;
+		break;
+	case EntityType::GHOST:
+		health = 1;
+		minSpeed = 0.01f;
+		maxSpeed = 0.04f;
+		facing = LEFT;
+		isMovingInDirection[LEFT] = true;
+		isMoving = true;
+		break;
+	case EntityType::BLOCK:
+		health = -1;
+		minSpeed = 0.1f;
+		maxSpeed = 0.1f;
+		facing = DOWN;
+		break;
+	default:
+		health = 0;
+		minSpeed = 0.0f;
+		maxSpeed = 0.0f;
+		facing = RIGHT;
+		break;
 	}
-
 }
 
 Entity::~Entity()
 {
-
 }
 
 bool Entity::PollEntityEvents()
@@ -72,7 +71,7 @@ bool Entity::PollEntityEvents()
 		if (velocity[UP] > 0.0f) velocity[UP] = 0.0f;
 	}
 	//else if (velocity[DOWN] != 0.0f || velocity[RIGHT] != 0.0f || velocity[UP] != 0.0f || velocity[LEFT] != 0.0f) std::cout << "ERROR IN VELOCITY MANAGEMENT" << std::endl << std::endl << std::endl << std::endl;
-	if(TextureList::textures[sprite->GetObjectType()] != TextureList::textures[TEXTURE_ENEMY])
+	if (TextureList::textures[sprite->GetObjectType()] != TextureList::textures[TEXTURE_ENEMY])
 		SetGravity();
 	SetJumpVelocity();
 	CheckCollisions();
@@ -115,25 +114,24 @@ bool Entity::MoveEntity()
 {
 	sprite->AddUpPosition(velocity[RIGHT] - velocity[LEFT], velocity[UP] - velocity[DOWN]);
 	return {};
-	
 }
 
 bool Entity::MoveEntity(Direction direction)
 {
 	switch (direction)
 	{
-		case LEFT:
-			sprite->AddUpPosition(-maxSpeed,0.0f);
-			break;
-		case RIGHT:
-			sprite->AddUpPosition(maxSpeed, 0.0f);
-			break;
-		case UP:
-			sprite->AddUpPosition(0.0f, maxSpeed);
-			break;
-		case DOWN:
-			sprite->AddUpPosition(0.0f, -maxSpeed);
-			break;
+	case LEFT:
+		sprite->AddUpPosition(-maxSpeed, 0.0f);
+		break;
+	case RIGHT:
+		sprite->AddUpPosition(maxSpeed, 0.0f);
+		break;
+	case UP:
+		sprite->AddUpPosition(0.0f, maxSpeed);
+		break;
+	case DOWN:
+		sprite->AddUpPosition(0.0f, -maxSpeed);
+		break;
 	}
 	return {};
 }
@@ -161,7 +159,8 @@ bool Entity::SetVelocity(float speed, Direction direction)
 
 
 int Entity::GetCollisionIndex(float posX, float posY, int direction, int directionCorner)
-{ //BUG WORKS LIKE 95%, walking in single block wide corridors is sometimes impossible, jumping into corners still bug the shit out of the player
+{
+	//BUG WORKS LIKE 95%, walking in single block wide corridors is sometimes impossible, jumping into corners still bug the shit out of the player
 	float tempX = posX;
 	float tempY = posY;
 	switch (direction)
@@ -173,7 +172,7 @@ int Entity::GetCollisionIndex(float posX, float posY, int direction, int directi
 	case RIGHT:
 		tempX = posX + velocity[RIGHT];
 		if (tempX == floorf(tempX)) tempX -= 1.0f;
-		if (tempY == floorf(tempY) && directionCorner==1)   tempY -= 1.0f;
+		if (tempY == floorf(tempY) && directionCorner == 1) tempY -= 1.0f;
 		break;
 	case UP:
 		tempY = posY + velocity[UP];
@@ -196,13 +195,20 @@ int Entity::GetCollisionIndex(float posX, float posY, int direction, int directi
 	}
 	return index;
 }
+
 bool Entity::CheckBlock(int direction, int blockIndex, float position)
-{ //BUG CORNER  COLLISIONS WRONG
-	if(Level::levelList[ownerIndex]->objects[blockIndex]->isSolid)
+{
+	//BUG CORNER  COLLISIONS WRONG
+	if (Level::levelList[ownerIndex]->objects[blockIndex]->isSolid)
 	{
-		float vel = abs(abs(position) - abs(Level::levelList[ownerIndex]->objects[blockIndex]->GetPosition()[direction > 1 ? (direction - 2) * 4 + (direction + 1) % 2 : (direction + 2) * 4 + (direction + 1) % 2]));
+		float vel = abs(abs(position) - abs(
+			Level::levelList[ownerIndex]->objects[blockIndex]->GetPosition()[direction > 1
+				                                                                 ? (direction - 2) * 4 + (direction + 1)
+				                                                                 % 2
+				                                                                 : (direction + 2) * 4 + (direction + 1)
+				                                                                 % 2]));
 		//std::cout << "temp: " << vel << std::endl;
-		
+
 		overrideVelocity[direction] = vel;
 		if (vel == 0.0f) velocity[direction] = vel;
 
@@ -217,7 +223,8 @@ bool Entity::CheckBlock(int direction, int blockIndex, float position)
 			isMovingInDirection[LEFT] = false;
 		}
 	}
-	else if(Level::levelList[ownerIndex]->objects[blockIndex]->GetObjectType()==TEXTURE_COIN && typeName==EntityType::PLAYER)
+	else if (Level::levelList[ownerIndex]->objects[blockIndex]->GetObjectType() == TEXTURE_COIN && typeName ==
+		EntityType::PLAYER)
 	{
 		Player::GetPlayerPtr()->CollectCoin(Level::levelList[ownerIndex]->objects[blockIndex]);
 	}
@@ -225,12 +232,12 @@ bool Entity::CheckBlock(int direction, int blockIndex, float position)
 	{
 		return false;
 	}
-	else if(Level::levelList[ownerIndex]->objects[blockIndex]->GetObjectType() == TEXTURE_FLAG && typeName==EntityType::PLAYER)
+	else if (Level::levelList[ownerIndex]->objects[blockIndex]->GetObjectType() == TEXTURE_FLAG && typeName ==
+		EntityType::PLAYER)
 	{
-		int newLevel = Level::GetActiveLevel()->index+1;
-		if(Level::levelList[ownerIndex]->index != Level::GetActiveLevel()->index)
+		int newLevel = Level::GetActiveLevel()->index + 1;
+		if (Level::levelList[ownerIndex]->index != Level::GetActiveLevel()->index)
 		{
-				
 		}
 		else if (newLevel == 5)
 		{
@@ -238,7 +245,7 @@ bool Entity::CheckBlock(int direction, int blockIndex, float position)
 		}
 		else
 		{
-			new Level{ (std::to_string(newLevel)) + ".level" };
+			new Level{(std::to_string(newLevel)) + ".level"};
 			Level::SetActiveLevel(newLevel);
 		}
 	}
@@ -249,7 +256,7 @@ void Entity::OverrideVelocity()
 {
 	for (int i = DOWN; i <= LEFT; ++i)
 	{
-		if(overrideVelocity[i]!=0.0f)
+		if (overrideVelocity[i] != 0.0f)
 		{
 			velocity[i] = overrideVelocity[i];
 			overrideVelocity[i] = 0.0f;
@@ -268,13 +275,14 @@ bool Entity::CheckCollisions() //W.I.P
 	{
 		for (int n = 0; n < 2; ++n)
 		{
-			int index = GetCollisionIndex(position[((direction+n==4?-1:direction) + n) * 4], position[((direction + n == 4 ? -1 : direction) + n) * 4 + 1], direction, n);
-			if(index>=0)
+			int index = GetCollisionIndex(position[((direction + n == 4 ? -1 : direction) + n) * 4],
+			                              position[((direction + n == 4 ? -1 : direction) + n) * 4 + 1], direction, n);
+			if (index >= 0)
 			{
 				if (!CheckBlock(direction, index, position[direction * 4 + (direction + 1) % 2]))
 					shouldDie = true;
 			}
-			if (overrideVelocity[direction]>0.0f || velocity[direction] == 0.0f) shouldDie = false;
+			if (overrideVelocity[direction] > 0.0f || velocity[direction] == 0.0f) shouldDie = false;
 		}
 		if (shouldDie) Level::GetActiveLevel()->ResetLevel();
 	}
@@ -288,8 +296,10 @@ bool Entity::CheckEntityCollisions()
 	for (auto entity : Level::GetActiveLevel()->entities)
 	{
 		float* pos = entity->sprite->GetPosition();
-		if (((checkedPos[0] >= pos[0] && checkedPos[0] <= pos[4]) || (checkedPos[4] >= pos[0] && checkedPos[4] <= pos[4])) &&
-			((checkedPos[1] >= pos[1] && checkedPos[1] <= pos[9]) || (checkedPos[9] >= pos[1] && checkedPos[9] <= pos[9])))
+		if (((checkedPos[0] >= pos[0] && checkedPos[0] <= pos[4]) || (checkedPos[4] >= pos[0] && checkedPos[4] <= pos[
+				4])) &&
+			((checkedPos[1] >= pos[1] && checkedPos[1] <= pos[9]) || (checkedPos[9] >= pos[1] && checkedPos[9] <= pos[
+				9])))
 		{
 			std::cout << "Collision with entity" << std::endl;
 			Level::GetActiveLevel()->ResetLevel();
@@ -342,10 +352,10 @@ void Entity::Jump()
 void Entity::SetGravity()
 {
 	//if (isOnGround)
-		//velocity[DOWN] = 0.0f;
+	//velocity[DOWN] = 0.0f;
 	if (jumpVelocity > 0.0f)
 	{
-		if (jumpTick >=3)
+		if (jumpTick >= 3)
 		{
 			jumpTick = 0;
 			jumpVelocity -= 0.03f;
@@ -369,8 +379,8 @@ void Entity::SetGravity()
 
 	if (velocity[DOWN] > 0.25f)
 		velocity[DOWN] = 0.25f;
-
 }
+
 void Entity::SetGravity(float modifier)
 {
 }
@@ -387,12 +397,16 @@ void Entity::PrintStatus()
 	std::cout << "Is Mid Jump: " << isMidJump << std::endl;
 	std::cout << "Is Moving: " << isMoving << std::endl;
 	std::cout << "Position: " << sprite->GetPosition()[0] << " " << sprite->GetPosition()[1] << std::endl;
-	std::cout << std::setprecision(9) << "Velocity D: " << velocity[DOWN] << " R: " << velocity[RIGHT] << " U: " << velocity[UP] << " L: " << velocity[LEFT] << std::endl;
+	std::cout << std::setprecision(9) << "Velocity D: " << velocity[DOWN] << " R: " << velocity[RIGHT] << " U: " <<
+		velocity[UP] << " L: " << velocity[LEFT] << std::endl;
 	std::cout << "Jump Velocity: " << jumpVelocity << " Jump Tick: " << jumpTick << std::endl;
 	for (int i = 0; i < 4; ++i)
-		{ std::cout << std::setprecision(9) << "Point " << i << ":  " << positions[4 * i] << "; " << positions[4 * i + 1] << std::endl; }
+	{
+		std::cout << std::setprecision(9) << "Point " << i << ":  " << positions[4 * i] << "; " << positions[4 * i + 1]
+			<< std::endl;
+	}
 	std::cout << std::endl;
-} 
+}
 
 bool Entity::PollEntitiesEvents()
 {
@@ -411,7 +425,6 @@ int Entity::CreateEntity(EntityType type, DrawnObject* object, int levelIndex)
 
 bool Entity::UnloadEntity(const int index)
 {
-
 	Level::GetActiveLevel()->entities.erase(Level::GetActiveLevel()->entities.begin() + index);
 	return false;
 }

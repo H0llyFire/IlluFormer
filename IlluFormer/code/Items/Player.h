@@ -10,7 +10,6 @@ private:
 	int animationFrame;
 	int animationTick;
 public:
-
 	Player(DrawnObject* object, int levelIndex);
 	~Player();
 	bool PollPlayerEvents();

@@ -45,9 +45,9 @@ bool TextureList::GenerateTextures()
 {
 	std::ifstream texturesFile("res/textures/textures.dat");
 	std::string line;
-	while(std::getline(texturesFile, line))
+	while (std::getline(texturesFile, line))
 	{
-		textures.push_back(new Texture("res/textures/"+line));
+		textures.push_back(new Texture("res/textures/" + line));
 	}
 	return false;
 }

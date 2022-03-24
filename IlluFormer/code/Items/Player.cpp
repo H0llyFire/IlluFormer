@@ -27,14 +27,14 @@ void Player::StartMovement(const Direction direction)
 	player->isMoving = true;
 	switch (direction)
 	{
-		case Direction::RIGHT:
-			isMovingInDirection[static_cast<int>(Direction::RIGHT)] = true;
-			break;
-		case Direction::LEFT:
-			isMovingInDirection[static_cast<int>(Direction::LEFT)] = true;
-			break;
-		default:
-			break;
+	case Direction::RIGHT:
+		isMovingInDirection[static_cast<int>(Direction::RIGHT)] = true;
+		break;
+	case Direction::LEFT:
+		isMovingInDirection[static_cast<int>(Direction::LEFT)] = true;
+		break;
+	default:
+		break;
 	}
 }
 

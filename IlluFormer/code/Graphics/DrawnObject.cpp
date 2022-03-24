@@ -1,14 +1,19 @@
 #include "DrawnObject.h"
 
-DrawnObject::DrawnObject(UniformPosition* uniPos, float* pos, unsigned int posAmount, unsigned int* indis, unsigned int indisAmount, Texture* texture, Shader* shader, int index)
-	: uniformPosition(uniPos), position(pos), positionsAmount(posAmount), indices(indis), indicesAmount(indisAmount), index(index), texture(texture), currentShader(shader)
+DrawnObject::DrawnObject(UniformPosition* uniPos, float* pos, unsigned int posAmount, unsigned int* indis,
+                         unsigned int indisAmount, Texture* texture, Shader* shader, int index)
+	: uniformPosition(uniPos), position(pos), positionsAmount(posAmount), indices(indis), indicesAmount(indisAmount),
+	  index(index), texture(texture), currentShader(shader)
 {
 	//position = new float(posAmount);
 	texture->Unbind();
-	if (texture == TextureList::textures[TEXTURE_WALL] || texture == TextureList::textures[TEXTURE_GROUND]) 
-		{ isSolid = true; }
+	if (texture == TextureList::textures[TEXTURE_WALL] || texture == TextureList::textures[TEXTURE_GROUND])
+	{
+		isSolid = true;
+	}
 	else { isSolid = false; }
-	if (texture == TextureList::textures[TEXTURE_SPIKE_UP] || texture == TextureList::textures[TEXTURE_SPIKE_RIGHT] || texture == TextureList::textures[TEXTURE_SPIKE_DOWN] || texture == TextureList::textures[TEXTURE_SPIKE_LEFT])
+	if (texture == TextureList::textures[TEXTURE_SPIKE_UP] || texture == TextureList::textures[TEXTURE_SPIKE_RIGHT] ||
+		texture == TextureList::textures[TEXTURE_SPIKE_DOWN] || texture == TextureList::textures[TEXTURE_SPIKE_LEFT])
 		isDeadly = true;
 	else
 		isDeadly = false;
@@ -100,7 +105,6 @@ int DrawnObject::FindObjectAtCoordinates(const float x, const float y, std::vect
 
 	for (const auto obj : *listOfObjects)
 	{
-
 		if (tempX == obj->uniformPosition->x)
 		{
 			if (tempY == obj->uniformPosition->y)
@@ -148,5 +152,5 @@ void DrawnObject::ReIndexList(int index, std::vector<DrawnObject*>* listOfObject
 	}
 }
 
-int DrawnObject::count{ 0 };
+int DrawnObject::count{0};
 //std::vector<DrawnObject*> DrawnObject::objects{};
