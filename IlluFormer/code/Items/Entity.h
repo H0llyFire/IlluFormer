@@ -49,7 +49,7 @@ public:
 	void SetJumpVelocity();
 	void PrintStatus();
 
-	bool UnloadEntity(const int index);
+	bool UnloadEntity(int index);
 
 	//static std::vector<Entity*> entityList;
 

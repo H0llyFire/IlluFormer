@@ -23,14 +23,14 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	if (Level::GetActiveLevel() != nullptr)
 	{
 		if (key == GLFW_KEY_A && action == GLFW_PRESS)
-			Player::GetPlayerPtr()->StartMovement(Direction::LEFT);
+			Player::GetPlayerPtr()->StartMovement(LEFT);
 		else if (key == GLFW_KEY_A && action == GLFW_RELEASE)
-			Player::GetPlayerPtr()->StopMovement(Direction::LEFT);
+			Player::GetPlayerPtr()->StopMovement(LEFT);
 
 		else if (key == GLFW_KEY_D && action == GLFW_PRESS)
-			Player::GetPlayerPtr()->StartMovement(Direction::RIGHT);
+			Player::GetPlayerPtr()->StartMovement(RIGHT);
 		else if (key == GLFW_KEY_D && action == GLFW_RELEASE)
-			Player::GetPlayerPtr()->StopMovement(Direction::RIGHT);
+			Player::GetPlayerPtr()->StopMovement(RIGHT);
 
 		else if (key == GLFW_KEY_SPACE && action == GLFW_PRESS)
 			Player::GetPlayerPtr()->isJumping = true;

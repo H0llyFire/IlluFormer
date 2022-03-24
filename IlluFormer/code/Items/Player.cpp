@@ -27,11 +27,11 @@ void Player::StartMovement(const Direction direction)
 	player->isMoving = true;
 	switch (direction)
 	{
-	case Direction::RIGHT:
-		isMovingInDirection[static_cast<int>(Direction::RIGHT)] = true;
+	case RIGHT:
+		isMovingInDirection[static_cast<int>(RIGHT)] = true;
 		break;
-	case Direction::LEFT:
-		isMovingInDirection[static_cast<int>(Direction::LEFT)] = true;
+	case LEFT:
+		isMovingInDirection[static_cast<int>(LEFT)] = true;
 		break;
 	default:
 		break;
@@ -42,11 +42,11 @@ void Player::StopMovement(Direction direction)
 {
 	switch (direction)
 	{
-	case Direction::RIGHT:
-		isMovingInDirection[static_cast<int>(Direction::RIGHT)] = false;
+	case RIGHT:
+		isMovingInDirection[static_cast<int>(RIGHT)] = false;
 		break;
-	case Direction::LEFT:
-		isMovingInDirection[static_cast<int>(Direction::LEFT)] = false;
+	case LEFT:
+		isMovingInDirection[static_cast<int>(LEFT)] = false;
 		break;
 	}
 }

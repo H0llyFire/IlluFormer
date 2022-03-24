@@ -20,7 +20,7 @@ bool WindowUI::CreateWindow(unsigned int width, unsigned int height, unsigned in
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	window = glfwCreateWindow(width, height, "Windown", NULL, NULL);
+	window = glfwCreateWindow(width, height, "Windown", nullptr, nullptr);
 	if (!window)
 	{
 		glfwTerminate();

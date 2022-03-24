@@ -7,7 +7,7 @@
 
 Entity::Entity(EntityType type, DrawnObject* object, int levelIndex)
 	: jumpVelocity(0.0f), isOnGround(false), jumpTick(0), tick(0), typeName(type), sprite(object),
-	  ownerIndex(levelIndex), isMoving(false), isJumping(0), isMidJump(false)
+	  ownerIndex(levelIndex), isMoving(false), isJumping(false), isMidJump(false)
 {
 	const float* positions = object->GetPosition();
 	for (int i = 0; i < 16; ++i)
